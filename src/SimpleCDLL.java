@@ -41,7 +41,7 @@ public class SimpleCDLL<T> implements SimpleList<T> {
       int pos = 0;
       int numChanges = SimpleCDLL.this.numChanges;
       Node2<T> prev = SimpleCDLL.this.dummy;
-      Node2<T> next = SimpleCDLL.this.dummy.next;
+      Node2<T> next = SimpleCDLL.this.dummy.next; // looked at this file for a full 20 minutes without changing anything trying to figure out what was wrong with my code, added the .next and everything worked, fml.
 
       Node2<T> update = null;
 
