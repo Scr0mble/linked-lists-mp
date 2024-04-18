@@ -19,7 +19,7 @@ public class SimpleCDLL<T> implements SimpleList<T> {
   // +--------------+
 
   public SimpleCDLL() {
-    this.dummy = new Node2<T>(null);
+    this.dummy = new Node2<T>(this.dummy, null, this.dummy);
     this.numChanges = 0;
     this.size = 0;
   }
@@ -41,7 +41,7 @@ public class SimpleCDLL<T> implements SimpleList<T> {
       int pos = 0;
       int numChanges = SimpleCDLL.this.numChanges;
       Node2<T> prev = SimpleCDLL.this.dummy;
-      Node2<T> next = SimpleCDLL.this.dummy;
+      Node2<T> next = SimpleCDLL.this.dummy.next;
 
       Node2<T> update = null;
 
@@ -49,7 +49,15 @@ public class SimpleCDLL<T> implements SimpleList<T> {
       // | Methods |
       // +---------+
 
+      private void failFast() {
+        if(this.numChanges != SimpleCDLL.this.numChanges) {
+          throw new ConcurrentModificationException();
+        }
+        return;
+      }
+
       public void add(T val) throws UnsupportedOperationException {
+        failFast();
         if(this.numChanges != SimpleCDLL.this.numChanges) {
           throw new UnsupportedOperationException();
         }
@@ -62,14 +70,17 @@ public class SimpleCDLL<T> implements SimpleList<T> {
       }
       
       public boolean hasNext() {
+        failFast();
         return (this.pos < SimpleCDLL.this.size);
       } // hasNext()
 
       public boolean hasPrevious() {
+        failFast();
         return (this.pos > 0);
       } // hasPrevious()
 
       public T next() {
+        failFast();
         if (!this.hasNext()) {
           throw new NoSuchElementException();
         }
@@ -81,14 +92,17 @@ public class SimpleCDLL<T> implements SimpleList<T> {
       } // next 
 
       public int nextIndex() {
+        failFast();
         return this.pos;
       } // nextIndex()
 
       public int previousIndex() {
+        failFast();
         return this.pos - 1;
       } // prevIndex
 
       public T previous() throws NoSuchElementException {
+        failFast();
         if (!this.hasPrevious())
           throw new NoSuchElementException();
         this.update = this.prev;
@@ -99,6 +113,7 @@ public class SimpleCDLL<T> implements SimpleList<T> {
       } // previous()
 
       public void remove() {
+        failFast();
         if(this.update == null) {
           throw new IllegalStateException();
         }
@@ -120,6 +135,7 @@ public class SimpleCDLL<T> implements SimpleList<T> {
       }
 
       public void set(T val) {
+        failFast();
         if(this.update == null) {
           throw new IllegalStateException();
         }
